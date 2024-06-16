@@ -418,7 +418,10 @@ int Searcher::negamax(int alpha, int beta, int depth, SearchStack *ss)
             // we can check for threefold repetition later, updates the state though
             game_history.push_back(copy.hash);
 
-            current_eval = -negamax<inPV>(-beta, -alpha, new_depth, ss + 1);
+            if (!inPV)
+                current_eval = -negamax<nonPV>(-(alpha + 1), -alpha, new_depth, ss + 1);
+            else
+                current_eval = -negamax<PV>(-beta, -alpha, new_depth, ss + 1);
 
             if (stopped)
                 return 0;
